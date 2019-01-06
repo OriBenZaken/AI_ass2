@@ -14,3 +14,11 @@ def read_labled_file(labled_file_name):
 
     return features, examples, tags
 
+def get_accuracy(true_tags, predicted_tags):
+    good = bad = 0.0
+    for true_tag, pred in zip(true_tags, predicted_tags):
+        if true_tag == pred:
+            good += 1
+        else:
+            bad += 1
+    return round((good/(good + bad)) * 100, 2)

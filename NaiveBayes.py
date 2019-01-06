@@ -4,7 +4,7 @@ class NaiveBayesClassifier(object):
         self.train_tags = train_tags
         self.examples_by_tag_dict = self.get_examples_by_tag_dict()
         self.feature_domain_size_dict = self.get_feature_domain_size_dict()
-        pass
+        
 
     def get_examples_by_tag_dict(self):
         examples_by_tag_dict = {}
