@@ -25,10 +25,29 @@ class DecisionTreeClassifier(object):
             return DecisionTreeNode(None, depth, is_leaf=True, pred=self.get_default_tag(tags))
 
         best_feature = self.choose_feature(features, examples, tags)
-        pass
+        feature_index = self.get_feature_index(best_feature)
+        node = DecisionTreeNode(best_feature, depth)
+        child_features = features.copy().remove(best_feature)
+        for possible_value in self.feature_domain_dict[best_feature]:
+            examples_and_tags_vi = [(example, tag) for example,tag in zip(examples, tags)
+                                  if example[feature_index] == possible_value]
+            tags_vi = [tag for example, tag in examples_and_tags_vi]
+            child = self.DTL(examples_and_tags_vi, child_features, depth + 1, self.get_default_tag(tags_vi))
+            node.children[possible_value] = child
 
-    def choose_feature(self, features, example, tags):
-        pass
+        return node
+
+
+    def choose_feature(self, features, examples, tags):
+        features_gains_dict = {feature : self.get_gain(examples, tags, feature) for feature in features}
+        max_gain = 0
+        max_feature = features[0]
+        for feature in features:
+            if features_gains_dict[feature] > max_gain:
+                max_gain = features_gains_dict[feature]
+                max_feature = feature
+
+        return max_feature
 
     def calculate_entropy(self, tags):
         tags_counter = Counter()
@@ -51,7 +70,7 @@ class DecisionTreeClassifier(object):
             relative_entropy = (float(len(examples_and_tags_vi)) / len(examples)) * entropy_vi
             relative_entropy_per_feature.append(relative_entropy)
 
-        return initial_entropy -sum(relative_entropy_per_feature)
+        return initial_entropy - sum(relative_entropy_per_feature)
 
 
 
