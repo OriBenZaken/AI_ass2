@@ -29,7 +29,8 @@ class DecisionTreeClassifier(object):
         best_feature = self.choose_feature(features, examples, tags)
         feature_index = self.get_feature_index(best_feature)
         node = DecisionTreeNode(best_feature, depth)
-        child_features = features[:].remove(best_feature)
+        child_features = features[:]
+        child_features.remove(best_feature)
         for possible_value in self.feature_domain_dict[best_feature]:
             examples_and_tags_vi = [(example, tag) for example,tag in zip(examples, tags)
                                   if example[feature_index] == possible_value]
