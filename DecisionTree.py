@@ -96,6 +96,8 @@ class DecisionTreeClassifier(object):
         for tag in tags:
             tags_counter[tag] += 1
 
+        if not tags:
+            return None
         # todo: return positive if yes = no
         return tags_counter.most_common(1)[0][0]
 
