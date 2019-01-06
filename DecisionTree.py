@@ -7,6 +7,8 @@ class DecisionTreeClassifier(object):
         self.train_examples = train_examples
         self.train_tags = train_tags
         self.feature_domain_dict = self.get_feature_domain_dict()
+        self.decisionTree = DecisionTree(self.DTL(zip(train_examples, train_tags), features, 0))
+        pass
 
     def DTL(self, examples_and_tags, features, depth, default=None):
         # examples is an empty list
@@ -27,7 +29,7 @@ class DecisionTreeClassifier(object):
         best_feature = self.choose_feature(features, examples, tags)
         feature_index = self.get_feature_index(best_feature)
         node = DecisionTreeNode(best_feature, depth)
-        child_features = features.copy().remove(best_feature)
+        child_features = features[:].remove(best_feature)
         for possible_value in self.feature_domain_dict[best_feature]:
             examples_and_tags_vi = [(example, tag) for example,tag in zip(examples, tags)
                                   if example[feature_index] == possible_value]
@@ -51,12 +53,14 @@ class DecisionTreeClassifier(object):
 
     def calculate_entropy(self, tags):
         tags_counter = Counter()
-        for example, tag in tags:
+        for tag in tags:
             tags_counter[tag] += 1
         classes_probs = [tags_counter[tag] / float(len(tags)) for tag in tags_counter]
         entropy = 0
         for prob in classes_probs:
             entropy -= -prob * math.log(prob, 2)
+
+        return entropy
 
     def get_gain(self, examples, tags, feature):
         initial_entropy = self.calculate_entropy(tags)

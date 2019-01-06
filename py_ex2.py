@@ -1,6 +1,7 @@
 import  Utils as ut
 from KNN import KNNClassifier
 from NaiveBayes import NaiveBayesClassifier
+from DecisionTree import DecisionTreeClassifier
 
 def main():
     features, train_examples, train_tags = ut.read_labled_file("train.txt")
@@ -8,6 +9,7 @@ def main():
 
     #classifier = KNNClassifier(train_examples, train_tags, k=5)
     classifier = NaiveBayesClassifier(train_examples, train_tags)
+    classifier = DecisionTreeClassifier(features[:len(features) - 1], train_examples, train_tags)
 
     preds = []
     for example, tag in zip(test_examples, test_tags):
