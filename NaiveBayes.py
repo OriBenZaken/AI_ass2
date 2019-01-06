@@ -4,7 +4,7 @@ class NaiveBayesClassifier(object):
         self.train_tags = train_tags
         self.examples_by_tag_dict = self.get_examples_by_tag_dict()
         self.feature_domain_size_dict = self.get_feature_domain_size_dict()
-        
+
 
     def get_examples_by_tag_dict(self):
         examples_by_tag_dict = {}
@@ -47,5 +47,6 @@ class NaiveBayesClassifier(object):
                 if train_example[feature_index] == example[feature_index]:
                     f_counter += 1
             conditioned_prob_list.append(float(f_counter)/ (tag_group_size + domain_size))
+        class_prob = float(len(tag_group)) / len(self.train_examples)
 
-        return reduce(lambda x, y: x * y, conditioned_prob_list)
+        return reduce(lambda x, y: x * y, conditioned_prob_list) * class_prob
