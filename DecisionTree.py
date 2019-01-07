@@ -58,7 +58,7 @@ class DecisionTreeClassifier(object):
         classes_probs = [tags_counter[tag] / float(len(tags)) for tag in tags_counter]
         entropy = 0
         for prob in classes_probs:
-            entropy -= -prob * math.log(prob, 2)
+            entropy -= prob * math.log(prob, 2)
 
         return entropy
 

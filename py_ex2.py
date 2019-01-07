@@ -8,7 +8,7 @@ def main():
     _,test_examples, test_tags = ut.read_labled_file("test.txt")
 
     #classifier = KNNClassifier(train_examples, train_tags, k=5)
-    classifier = NaiveBayesClassifier(train_examples, train_tags)
+    #classifier = NaiveBayesClassifier(train_examples, train_tags)
     classifier = DecisionTreeClassifier(features[:len(features) - 1], train_examples, train_tags)
 
     preds = []
