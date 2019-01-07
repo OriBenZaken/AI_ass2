@@ -4,6 +4,13 @@ from NaiveBayes import NaiveBayesClassifier
 from DecisionTree import DecisionTreeClassifier
 
 def write_output_files(test_tags, preds_per_classifier, accuracy_per_classifier, dt_cls):
+    """
+    Writes the classifiers results on the test set to output.txt and output_tree.txt file.
+    :param test_tags: tast tags
+    :param preds_per_classifier: list of predictions of each classifier
+    :param accuracy_per_classifier: list of accuracy of each classifier
+    :param dt_cls: DecisionTreeClassifier object.
+    """
     dt_preds, knn_preds, nb_preds = preds_per_classifier[0], preds_per_classifier[1], preds_per_classifier[2]
     dt_acc, knn_acc, nb_acc = accuracy_per_classifier[0], accuracy_per_classifier[1], accuracy_per_classifier[2]
     with open("output.txt", "w") as output:
@@ -16,14 +23,15 @@ def write_output_files(test_tags, preds_per_classifier, accuracy_per_classifier,
         lines.append("\t{}\t{}\t{}".format(dt_acc, knn_acc, nb_acc))
         output.writelines("\n".join(lines))
 
-    with open("output_tree.txt", "w") as output:
-        output.write(dt_cls.decisionTree.get_tree_string(dt_cls.decisionTree.root))
-
-
-
+    dt_cls.write_tree_to_file("output_tree.txt")
 
 
 def main():
+    """
+    Main function of ex 2.
+    Runs KNN, Naive Bayes and Decision Tree classifiers and writes the
+    results to output.txt and output_tree.txt
+    """
     features, train_examples, train_tags = ut.read_labled_file("train.txt")
     _,test_examples, test_tags = ut.read_labled_file("test.txt")
 
