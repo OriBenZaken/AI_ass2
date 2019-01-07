@@ -18,6 +18,7 @@ def main():
         preds.append(pred)
 
     print(ut.get_accuracy(test_tags, preds))
+    classifier.write_tree_to_file("my_output_tree.txt")
 
 if __name__ == "__main__":
     main()

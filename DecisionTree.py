@@ -7,7 +7,7 @@ class DecisionTreeClassifier(object):
         self.train_examples = train_examples
         self.train_tags = train_tags
         self.feature_domain_dict = self.get_feature_domain_dict()
-        self.decisionTree = DecisionTree(self.DTL(zip(train_examples, train_tags), features, 0))
+        self.decisionTree = DecisionTree(self.DTL(zip(train_examples, train_tags), features, 0), features)
         pass
 
     def DTL(self, examples_and_tags, features, depth, default=None):
@@ -34,8 +34,7 @@ class DecisionTreeClassifier(object):
         for possible_value in self.feature_domain_dict[best_feature]:
             examples_and_tags_vi = [(example, tag) for example,tag in zip(examples, tags)
                                   if example[feature_index] == possible_value]
-            tags_vi = [tag for example, tag in examples_and_tags_vi]
-            child = self.DTL(examples_and_tags_vi, child_features, depth + 1, self.get_default_tag(tags_vi))
+            child = self.DTL(examples_and_tags_vi, child_features, depth + 1, self.get_default_tag(tags))
             node.children[possible_value] = child
 
         return node
@@ -96,15 +95,45 @@ class DecisionTreeClassifier(object):
         for tag in tags:
             tags_counter[tag] += 1
 
-        if not tags:
-            return None
         # todo: return positive if yes = no
         return tags_counter.most_common(1)[0][0]
 
+    def predict(self, example):
+        return self.decisionTree.traverse_tree(example)
+
+    def write_tree_to_file(self, output_file_name):
+        with open(output_file_name, "w") as output:
+            output.write(self.decisionTree.get_tree_string(self.decisionTree.root, ""))
+
 
 class DecisionTree(object):
-    def __init__(self, root):
+    def __init__(self, root, features):
         self.root = root
+        self.features = features
+
+    def traverse_tree(self, example):
+        current_node = self.root
+        while not current_node.is_leaf:
+            feature_value = example[self.get_feature_index(current_node.feature)]
+            current_node = current_node.children[feature_value]
+
+        return current_node.pred
+
+    def get_feature_index(self, feature):
+        return self.features.index(feature)
+
+    def get_tree_string(self, node, string):
+        for child in node.children:
+            string += node.depth * "\t"
+            if node.depth > 0:
+                string += "|"
+            string += node.feature + "=" + child
+            if node.children[child].is_leaf:
+                string += ":" + node.children[child].pred + "\n"
+            else:
+                string += "\n" + self.get_tree_string(node.children[child], "")
+
+        return string
 
 
 class DecisionTreeNode(object):
