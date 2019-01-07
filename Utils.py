@@ -22,3 +22,10 @@ def get_accuracy(true_tags, predicted_tags):
         else:
             bad += 1
     return round((good/(good + bad)) * 100, 2)
+
+def find_positive_tag(tags):
+    for tag in tags:
+        if tag in ["yes", "true"]:
+            return tag
+
+    return tag[0]

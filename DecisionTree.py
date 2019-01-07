@@ -1,5 +1,6 @@
 from collections import Counter
 import math
+import Utils as ut
 
 class DecisionTreeClassifier(object):
     def __init__(self, features, train_examples, train_tags):
@@ -20,10 +21,12 @@ class DecisionTreeClassifier(object):
         examples = [example for example, tag in examples_and_tags]
 
         if len(set(tags)) == 1:
+            liz = tags[0]
             return DecisionTreeNode(None, depth, is_leaf=True, pred=tags[0])
 
         # features list is empty
         if not features:
+            liza = self.get_default_tag(tags)
             return DecisionTreeNode(None, depth, is_leaf=True,  pred=self.get_default_tag(tags))
 
         best_feature = self.choose_feature(features, examples, tags)
@@ -56,7 +59,7 @@ class DecisionTreeClassifier(object):
 
         if not tags:
             return 0
-        
+
         for tag in tags:
             tags_counter[tag] += 1
         classes_probs = [tags_counter[tag] / float(len(tags)) for tag in tags_counter]
@@ -102,7 +105,9 @@ class DecisionTreeClassifier(object):
         for tag in tags:
             tags_counter[tag] += 1
 
-        # todo: return positive if yes = no
+        if len(tags_counter) == 2 and tags_counter.values()[0] == tags_counter.values()[1]:
+            return ut.find_positive_tag(tags_counter.keys())
+
         return tags_counter.most_common(1)[0][0]
 
     def predict(self, example):

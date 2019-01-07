@@ -1,3 +1,5 @@
+import Utils as ut
+
 class NaiveBayesClassifier(object):
     def __init__(self, train_examples, train_tags):
         self.train_examples = train_examples
@@ -28,11 +30,15 @@ class NaiveBayesClassifier(object):
     def predict(self, example):
         max_prob = 0
         max_tag = self.examples_by_tag_dict.keys()[0]
-
+        probs = []
         for tag in self.examples_by_tag_dict:
             prob = self.calculate_prob(example, self.examples_by_tag_dict[tag])
+            probs.append(prob)
             if prob > max_prob:
                 max_prob, max_tag = prob, tag
+
+        if len(probs) == 2 and probs[0] == probs[1]:
+            return ut.find_positive_tag(self.examples_by_tag_dict.keys())
 
         return max_tag
 
