@@ -1,4 +1,6 @@
 import Utils as ut
+from functools import reduce
+
 
 class NaiveBayesClassifier(object):
     def __init__(self, train_examples, train_tags):
@@ -29,7 +31,7 @@ class NaiveBayesClassifier(object):
 
     def predict(self, example):
         max_prob = 0
-        max_tag = self.examples_by_tag_dict.keys()[0]
+        max_tag = list(self.examples_by_tag_dict.keys())[0]
         probs = []
         for tag in self.examples_by_tag_dict:
             prob = self.calculate_prob(example, self.examples_by_tag_dict[tag])

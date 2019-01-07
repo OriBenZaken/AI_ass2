@@ -8,7 +8,8 @@ class DecisionTreeClassifier(object):
         self.train_examples = train_examples
         self.train_tags = train_tags
         self.feature_domain_dict = self.get_feature_domain_dict()
-        self.decisionTree = DecisionTree(self.DTL(zip(train_examples, train_tags), features, 0,self.get_default_tag(train_tags)), features)
+        tagged_examples = [(example, tag) for example, tag in zip(self.train_examples, self.train_tags)]
+        self.decisionTree = DecisionTree(self.DTL(tagged_examples, features, 0,self.get_default_tag(train_tags)), features)
         pass
 
     def DTL(self, examples_and_tags, features, depth, default=None):
@@ -29,6 +30,8 @@ class DecisionTreeClassifier(object):
             liza = self.get_default_tag(tags)
             return DecisionTreeNode(None, depth, is_leaf=True,  pred=self.get_default_tag(tags))
 
+        if not examples:
+            print("d")
         best_feature = self.choose_feature(features, examples, tags)
         feature_index = self.get_feature_index(best_feature)
         node = DecisionTreeNode(best_feature, depth)
@@ -81,6 +84,8 @@ class DecisionTreeClassifier(object):
                                             if example[feature_index] == possible_value]
             tags_vi = [tag for example, tag in examples_and_tags_vi]
             entropy_vi = self.calculate_entropy(tags_vi)
+            if not examples:
+                pass
             relative_entropy = (float(len(examples_and_tags_vi)) / len(examples)) * entropy_vi
             relative_entropy_per_feature.append(relative_entropy)
 
@@ -105,7 +110,8 @@ class DecisionTreeClassifier(object):
         for tag in tags:
             tags_counter[tag] += 1
 
-        if len(tags_counter) == 2 and tags_counter.values()[0] == tags_counter.values()[1]:
+        if len(tags_counter) == 2 and list(tags_counter.values())[0] == list(tags_counter.values())[1]:
+            print("Wow")
             return ut.find_positive_tag(tags_counter.keys())
 
         return tags_counter.most_common(1)[0][0]
