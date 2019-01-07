@@ -7,7 +7,7 @@ class DecisionTreeClassifier(object):
         self.train_examples = train_examples
         self.train_tags = train_tags
         self.feature_domain_dict = self.get_feature_domain_dict()
-        self.decisionTree = DecisionTree(self.DTL(zip(train_examples, train_tags), features, 0), features)
+        self.decisionTree = DecisionTree(self.DTL(zip(train_examples, train_tags), features, 0,self.get_default_tag(train_tags)), features)
         pass
 
     def DTL(self, examples_and_tags, features, depth, default=None):
@@ -24,7 +24,7 @@ class DecisionTreeClassifier(object):
 
         # features list is empty
         if not features:
-            return DecisionTreeNode(None, depth, is_leaf=True, pred=self.get_default_tag(tags))
+            return DecisionTreeNode(None, depth, is_leaf=True,  pred=self.get_default_tag(tags))
 
         best_feature = self.choose_feature(features, examples, tags)
         feature_index = self.get_feature_index(best_feature)
@@ -53,9 +53,16 @@ class DecisionTreeClassifier(object):
 
     def calculate_entropy(self, tags):
         tags_counter = Counter()
+
+        if not tags:
+            return 0
+        
         for tag in tags:
             tags_counter[tag] += 1
         classes_probs = [tags_counter[tag] / float(len(tags)) for tag in tags_counter]
+        if 0.0 in classes_probs:
+            return 0
+
         entropy = 0
         for prob in classes_probs:
             entropy -= prob * math.log(prob, 2)
@@ -103,7 +110,7 @@ class DecisionTreeClassifier(object):
 
     def write_tree_to_file(self, output_file_name):
         with open(output_file_name, "w") as output:
-            output.write(self.decisionTree.get_tree_string(self.decisionTree.root, ""))
+            output.write(self.decisionTree.get_tree_string(self.decisionTree.root))
 
 
 class DecisionTree(object):
@@ -122,8 +129,9 @@ class DecisionTree(object):
     def get_feature_index(self, feature):
         return self.features.index(feature)
 
-    def get_tree_string(self, node, string):
-        for child in node.children:
+    def get_tree_string(self, node):
+        string = ""
+        for child in sorted(node.children):
             string += node.depth * "\t"
             if node.depth > 0:
                 string += "|"
@@ -131,7 +139,7 @@ class DecisionTree(object):
             if node.children[child].is_leaf:
                 string += ":" + node.children[child].pred + "\n"
             else:
-                string += "\n" + self.get_tree_string(node.children[child], "")
+                string += "\n" + self.get_tree_string(node.children[child])
 
         return string
 
