@@ -40,12 +40,10 @@ class DecisionTreeClassifier(object):
         examples = [example for example, tag in examples_and_tags]
 
         if len(set(tags)) == 1:
-            liz = tags[0]
             return DecisionTreeNode(None, depth, is_leaf=True, pred=tags[0])
 
         # features list is empty
         if not features:
-            liza = self.get_default_tag(tags)
             return DecisionTreeNode(None, depth, is_leaf=True,  pred=self.get_default_tag(tags))
 
         # find the best feature for the current node

@@ -1,3 +1,5 @@
+import math
+
 def read_labled_file(labled_file_name):
     features = []
     examples = []
@@ -21,7 +23,8 @@ def get_accuracy(true_tags, predicted_tags):
             good += 1
         else:
             bad += 1
-    return round((good/(good + bad)) * 100, 2)
+        accuracy = float(good)/(good + bad)
+    return math.ceil(accuracy * 100) / 100
 
 def find_positive_tag(tags):
     for tag in tags:
