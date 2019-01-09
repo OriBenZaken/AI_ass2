@@ -237,7 +237,7 @@ class DecisionTree(object):
             else:
                 string += "\n" + self.get_tree_string(node.children[child])
 
-        return string
+        return string[:len(string) - 1]
 
 
 class DecisionTreeNode(object):
