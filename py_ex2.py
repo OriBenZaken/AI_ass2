@@ -32,8 +32,8 @@ def main():
     Runs KNN, Naive Bayes and Decision Tree classifiers and writes the
     results to output.txt and output_tree.txt
     """
-    features, train_examples, train_tags = ut.read_labled_file("TESTS-EX2-V3/TEST1/train.txt")
-    _,test_examples, test_tags = ut.read_labled_file("TESTS-EX2-V3/TEST1/test.txt")
+    features, train_examples, train_tags = ut.read_labled_file("TESTS-EX2-V4/TEST3/train.txt")
+    _,test_examples, test_tags = ut.read_labled_file("TESTS-EX2-V4/TEST3/test.txt")
 
     knn_cls = KNNClassifier(train_examples, train_tags, k=5)
     nb_cls = NaiveBayesClassifier(train_examples, train_tags)

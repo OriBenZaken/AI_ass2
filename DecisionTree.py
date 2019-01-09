@@ -181,7 +181,8 @@ class DecisionTreeClassifier(object):
         :param output_file_name: output file name
         """
         with open(output_file_name, "w") as output:
-            output.write(self.decisionTree.get_tree_string(self.decisionTree.root))
+            tree_string = self.decisionTree.get_tree_string(self.decisionTree.root)
+            output.write(tree_string[:len(tree_string) - 1])
 
 
 class DecisionTree(object):
@@ -237,7 +238,7 @@ class DecisionTree(object):
             else:
                 string += "\n" + self.get_tree_string(node.children[child])
 
-        return string[:len(string) - 1]
+        return string
 
 
 class DecisionTreeNode(object):
